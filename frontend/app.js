@@ -1,4 +1,4 @@
-const API = "http://localhost:5000";
+const API = "https://study-swap.onrender.com";
 
 async function load() {
     try {
