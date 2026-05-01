@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Налаштування Cloudinary (назви змінено згідно з твоїм скриншотом Render)
+// Налаштування Cloudinary
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -33,12 +33,12 @@ const ItemSchema = new mongoose.Schema({
 
 const Item = mongoose.model('Item', ItemSchema);
 
-// Підключення до БД (назва MONGODB_URI як на скриншоті)
+// Підключення до БД
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("✅ База підключена успішно"))
     .catch(err => console.error("❌ Помилка підключення до БД:", err));
 
-// Отримати всі оголошення (нові будуть зверху)
+// Отримати всі оголошення
 app.get('/api/items', async (req, res) => {
     try {
         const items = await Item.find().sort({ createdAt: -1 });
