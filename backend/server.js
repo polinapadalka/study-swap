@@ -40,8 +40,13 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Ендпоінт: Отримати всі оголошення
 app.get('/api/items', async (req, res) => {
-    const items = await Item.find().sort({ createdAt: -1 }); // Нові зверху
-    res.json(items);
+    try {
+        const items = await Item.find(); // Тимчасово приберемо sort, щоб перевірити запуск
+        res.json(items);
+    } catch (err) {
+        console.error("Помилка БД:", err);
+        res.status(500).json({ message: "Помилка сервера" });
+    }
 });
 
 // Ендпоінт: Створити оголошення
