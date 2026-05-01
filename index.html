@@ -3,38 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Swap</title>
+    <title>Study Swap | Твій навчальний простір</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
-    <button id="theme-toggle">🌓</button>
+    <button id="theme-toggle" class="theme-btn">
+        <span class="sun">☀️</span>
+        <span class="moon">🌙</span>
+    </button>
 
-    <header>
-        <div class="header-content" data-aos="zoom-in">
-            <span class="emoji-book">📘</span>
-            <h1>Study Swap</h1>
+    <header class="main-header">
+        <div class="container" data-aos="fade-down">
+            <div class="logo-area">
+                <span class="emoji-book">📘</span>
+                <h1>Study Swap</h1>
+            </div>
+            <p class="header-subtitle">Обмінюйся знаннями легко та стильно</p>
         </div>
     </header>
 
-    <main>
-        <section class="upload-container" data-aos="fade-up">
-            <input type="text" id="title" placeholder="Назва матеріалу">
-            <input type="text" id="description" placeholder="Предмет (напр. Математика)">
-            <div class="file-input-wrapper">
-                <input type="file" id="image">
+    <main class="main-content container">
+        <section class="upload-section card-box" data-aos="fade-up">
+            <h2 class="section-title">Завантажити новий матеріал</h2>
+            <div class="form-group">
+                <input type="text" id="title" placeholder="Назва (напр. Домашнє завдання)">
+                <input type="text" id="description" placeholder="Предмет (напр. Математика)">
+                <div class="file-input-wrapper">
+                    <label for="image" class="file-label">
+                        <span class="file-icon">📁</span>
+                        <span class="file-text">Обрати файл або фото</span>
+                    </label>
+                    <input type="file" id="image">
+                </div>
             </div>
-            <button class="main-btn" onclick="uploadItem()">Завантажити</button>
+            <button class="primary-btn" onclick="uploadItem()">📘 Опублікувати</button>
         </section>
 
-        <section class="search-container" data-aos="fade-up">
-            <input type="text" id="search" placeholder="🔍 Пошук по предметах..." oninput="filterItems()">
+        <section class="search-section" data-aos="fade-up" data-aos-delay="100">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search" placeholder="Пошук по предметах..." oninput="filterItems()">
+            </div>
         </section>
 
-        <div id="items-container" class="cards-grid"></div>
+        <div id="items-container" class="cards-grid">
+            <div class="card skeleton"></div>
+            <div class="card skeleton"></div>
+            <div class="card skeleton"></div>
+        </div>
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+    </script>
     <script src="app.js"></script>
 </body>
 </html>
