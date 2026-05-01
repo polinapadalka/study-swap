@@ -1,116 +1,58 @@
+:root {
+    --bg: #ffffff;
+    --text: #333;
+    --card: #f4f4f4;
+    --accent: #6a0dad;
+}
+
+[data-theme="dark"] {
+    --bg: #1a1a2e;
+    --text: #fff;
+    --card: #16213e;
+    --accent: #bb86fc;
+}
+
 body {
-    background-color: #f8f9fa;
-    font-family: 'Inter', sans-serif;
-    margin: 0;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', sans-serif;
+    transition: 0.3s;
+    margin: 0; padding: 20px;
 }
 
-.header {
-    background: linear-gradient(135deg, #6a5acd 0%, #483d8b 100%);
-    color: white;
-    padding: 60px 20px 80px 20px; /* Великий відступ знизу */
-    text-align: center;
+#theme-toggle {
+    position: fixed; top: 20px; right: 20px;
+    background: var(--accent); color: white;
+    border: none; padding: 10px; border-radius: 50%; cursor: pointer;
 }
 
-.logo-text {
-    margin: 0;
-    font-size: 3em;
-    font-weight: 800;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-}
-
-.upload-form {
-    background: white;
-    max-width: 500px;
-    margin: -40px auto 40px auto; /* Наїжджає на хедер */
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.card {
+    background: var(--card);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
     position: relative;
-    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.upload-form input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+.card img { width: 100%; border-radius: 10px; }
+
+.delete-btn {
+    background: #ff4d4d; color: white;
+    border: none; padding: 5px 10px;
+    border-radius: 5px; cursor: pointer;
+    margin-top: 10px;
 }
 
-.upload-form button {
-    background: #ffcc00;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
+/* Скелетон анімація */
+.skeleton {
+    height: 200px;
+    background: linear-gradient(90deg, var(--card) 25%, var(--bg) 50%, var(--card) 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
 }
 
-/* ДОШКА */
-.kanban-container {
-    display: flex;
-    gap: 25px;
-    padding: 20px 40px;
-    overflow-x: auto;
-    align-items: flex-start;
-}
-
-.kanban-column {
-    min-width: 280px;
-    background: #eef0f4;
-    padding: 15px;
-    border-radius: 15px;
-}
-
-.kanban-column h3 {
-    margin: 0 0 15px 5px;
-    color: #444;
-}
-
-/* КАРТКА */
-.material-card {
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    margin-bottom: 15px;
-}
-
-.card-header {
-    background: #7b68ee;
-    color: white;
-    padding: 10px 15px;
-    font-weight: bold;
-}
-
-.card-body {
-    padding: 15px;
-}
-
-.card-body h4 {
-    margin: 0;
-    color: #333;
-}
-
-.card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 15px 15px;
-}
-
-.view-link {
-    text-decoration: none;
-    color: #6a5acd;
-    font-weight: bold;
-    font-size: 0.9em;
-}
-
-.like-btn {
-    background: #fff0f0;
-    border: 1px solid #ffcccc;
-    padding: 5px 10px;
-    border-radius: 15px;
-    cursor: pointer;
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }

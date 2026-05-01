@@ -1,86 +1,76 @@
-const API = "https://study-swap.onrender.com";
+const API_URL = "https://study-swap.onrender.com/api/items";
+let allItems = []; // Зберігаємо тут копію даних для пошуку
 
-async function load() {
-    try {
-        const res = await fetch(API + "/materials");
-        const data = await res.json();
-        const board = document.getElementById('kanban-board');
-        board.innerHTML = "";
+// Темна тема
+document.getElementById('theme-toggle').addEventListener('click', () => {
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+});
 
-        const groups = {};
-        data.forEach(m => {
-            if (!groups[m.subject]) groups[m.subject] = [];
-            groups[m.subject].push(m);
-        });
-
-        for (let subject in groups) {
-            const column = document.createElement('div');
-            column.className = 'kanban-column';
-            let content = `<h3>📌 ${subject}</h3>`;
-
-            groups[subject].forEach(m => {
-                const fileButton = m.file 
-                    ? `<a href="${m.file}" target="_blank" class="view-link">👁 Переглянути</a>` 
-                    : `<span style="color:gray; font-size:0.8em;">Немає файлу</span>`;
-
-                content += `
-                    <div class="material-card">
-                        <div class="card-header">${subject}</div>
-                        <div class="card-body"><h4>${m.title}</h4></div>
-                        <div class="card-footer">
-                            ${fileButton}
-                            <button class="like-btn" onclick="like('${m._id}')">❤️ ${m.likes}</button>
-                        </div>
-                    </div>`;
-            });
-            column.innerHTML = content;
-            board.appendChild(column);
-        }
-    } catch (err) { console.error("Помилка завантаження:", err); }
-}
-
-async function upload() {
-    const title = document.getElementById('title');
-    const subject = document.getElementById('subject');
-    const fileInput = document.getElementById('file');
-    const btn = document.querySelector('button');
-
-    if (!title.value || !subject.value || !fileInput.files[0]) {
-        alert("Заповни всі поля та обери файл!");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("title", title.value);
-    formData.append("subject", subject.value);
-    formData.append("file", fileInput.files[0]);
+// Завантаження даних
+async function loadItems() {
+    const container = document.getElementById('items-container');
+    container.innerHTML = '<div class="card skeleton"></div>'; // Показуємо скелетон
 
     try {
-        btn.disabled = true;
-        btn.innerText = "Завантаження...";
-
-        const res = await fetch(API + "/materials", {
-            method: "POST",
-            body: formData
-        });
-
-        if (res.ok) {
-            title.value = ""; subject.value = ""; fileInput.value = "";
-            await load();
-        } else {
-            alert("Сервер відхилив запит. Перевір консоль бекенду.");
-        }
+        const res = await fetch(API_URL);
+        allItems = await res.json();
+        renderItems(allItems);
+        AOS.init(); // Перезапуск анімацій
     } catch (err) {
-        console.error("Помилка відправки:", err);
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "Завантажити";
+        container.innerHTML = "Помилка завантаження";
     }
 }
 
-async function like(id) {
-    await fetch(`${API}/materials/${id}/like`, { method: "POST" });
-    load();
+function renderItems(items) {
+    const container = document.getElementById('items-container');
+    container.innerHTML = '';
+    
+    items.forEach(item => {
+        const date = new Date(item.createdAt).toLocaleString('uk-UA');
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.setAttribute('data-aos', 'fade-up');
+        
+        card.innerHTML = `
+            <h3>${item.title} <small>(${item.category})</small></h3>
+            <p>${item.description}</p>
+            ${item.imageUrl ? `<img src="${item.imageUrl}">` : ''}
+            <p style="font-size: 12px; opacity: 0.6;">Створено: ${date}</p>
+            <button class="delete-btn" onclick="deleteItem('${item._id}')">🗑 Видалити</button>
+        `;
+        container.appendChild(card);
+    });
 }
 
-load();
+// Пошук
+function filterItems() {
+    const query = document.getElementById('search').value.toLowerCase();
+    const filtered = allItems.filter(item => 
+        item.title.toLowerCase().includes(query) || 
+        item.description.toLowerCase().includes(query)
+    );
+    renderItems(filtered);
+}
+
+// Створення
+async function uploadItem() {
+    const formData = new FormData();
+    formData.append('title', document.getElementById('title').value);
+    formData.append('description', document.getElementById('description').value);
+    formData.append('category', document.getElementById('category').value);
+    formData.append('image', document.getElementById('image').files[0]);
+
+    await fetch(API_URL, { method: 'POST', body: formData });
+    loadItems();
+}
+
+// Видалення
+async function deleteItem(id) {
+    if(confirm('Видалити це оголошення?')) {
+        await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        loadItems();
+    }
+}
+
+loadItems();

@@ -3,25 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Swap</title>
+    <title>StudySwap | Polina Padalka</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
+    <button id="theme-toggle">🌓</button>
 
-<div class="header">
-    <h1 class="logo-text">📘 Study Swap</h1>
-</div>
+    <header data-aos="zoom-in">
+        <h1>StudySwap</h1>
+        <p>Розроблено Поліною Падалкою</p>
+    </header>
 
-<div class="upload-form">
-    <input id="title" placeholder="Назва матеріалу">
-    <input id="subject" placeholder="Предмет (напр. Математика)">
-    <input type="file" id="file">
-    <button onclick="upload()">Завантажити</button>
-</div>
+    <main>
+        <section class="form-section" data-aos="fade-right">
+            <input type="text" id="title" placeholder="Назва (напр. Математика)">
+            <textarea id="description" placeholder="Опис..."></textarea>
+            <select id="category">
+                <option value="Допомога">Допомога</option>
+                <option value="Предмети">Предмети</option>
+                <option value="Послуги">Послуги</option>
+            </select>
+            <input type="file" id="image">
+            <button onclick="uploadItem()">Опублікувати</button>
+        </section>
 
-<div id="kanban-board" class="kanban-container">
-    </div>
+        <section class="controls" data-aos="fade-left">
+            <input type="text" id="search" placeholder="Пошук оголошень..." oninput="filterItems()">
+        </section>
 
-<script src="app.js"></script>
+        <div id="items-container">
+            </div>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
