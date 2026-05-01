@@ -3,37 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudySwap | Polina Padalka</title>
+    <title>Study Swap</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
     <button id="theme-toggle">🌓</button>
 
-    <header data-aos="zoom-in">
-        <h1>StudySwap</h1>
-        <p>Розроблено Поліною Падалкою</p>
+    <header>
+        <div class="header-content" data-aos="zoom-in">
+            <span class="emoji-book">📘</span>
+            <h1>Study Swap</h1>
+        </div>
     </header>
 
     <main>
-        <section class="form-section" data-aos="fade-right">
-            <input type="text" id="title" placeholder="Назва (напр. Математика)">
-            <textarea id="description" placeholder="Опис..."></textarea>
-            <select id="category">
-                <option value="Допомога">Допомога</option>
-                <option value="Предмети">Предмети</option>
-                <option value="Послуги">Послуги</option>
-            </select>
-            <input type="file" id="image">
-            <button onclick="uploadItem()">Опублікувати</button>
-        </section>
-
-        <section class="controls" data-aos="fade-left">
-            <input type="text" id="search" placeholder="Пошук оголошень..." oninput="filterItems()">
-        </section>
-
-        <div id="items-container">
+        <section class="upload-container" data-aos="fade-up">
+            <input type="text" id="title" placeholder="Назва матеріалу">
+            <input type="text" id="description" placeholder="Предмет (напр. Математика)">
+            <div class="file-input-wrapper">
+                <input type="file" id="image">
             </div>
+            <button class="main-btn" onclick="uploadItem()">Завантажити</button>
+        </section>
+
+        <section class="search-container" data-aos="fade-up">
+            <input type="text" id="search" placeholder="🔍 Пошук по предметах..." oninput="filterItems()">
+        </section>
+
+        <div id="items-container" class="cards-grid"></div>
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
