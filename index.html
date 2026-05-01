@@ -2,8 +2,8 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Swap | Твій навчальний простір</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Study Swap</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
@@ -19,45 +19,34 @@
                 <span class="emoji-book">📘</span>
                 <h1>Study Swap</h1>
             </div>
-            <p class="header-subtitle">Обмінюйся знаннями легко та стильно</p>
+            <p class="header-subtitle">Твій стильний простір для навчання</p>
         </div>
     </header>
 
     <main class="main-content container">
         <section class="upload-section card-box" data-aos="fade-up">
-            <h2 class="section-title">Завантажити новий матеріал</h2>
+            <h2 class="section-title">Нове оголошення</h2>
             <div class="form-group">
-                <input type="text" id="title" placeholder="Назва (напр. Домашнє завдання)">
-                <input type="text" id="description" placeholder="Предмет (напр. Математика)">
-                <div class="file-input-wrapper">
-                    <label for="image" class="file-label">
-                        <span class="file-icon">📁</span>
-                        <span class="file-text">Обрати файл або фото</span>
-                    </label>
+                <input type="text" id="title" placeholder="Назва матеріалу">
+                <input type="text" id="description" placeholder="Предмет (напр. Історія)">
+                <label class="file-label">
+                    <span>📁 Обрати файл</span>
                     <input type="file" id="image">
-                </div>
+                </label>
             </div>
-            <button class="primary-btn" onclick="uploadItem()">📘 Опублікувати</button>
+            <button class="primary-btn" onclick="uploadItem()">Опублікувати</button>
         </section>
 
-        <section class="search-section" data-aos="fade-up" data-aos-delay="100">
+        <section class="search-section" data-aos="fade-up">
             <div class="search-wrapper">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="search" placeholder="Пошук по предметах..." oninput="filterItems()">
+                <input type="text" id="search" placeholder="🔍 Пошук по предметах..." oninput="filterItems()">
             </div>
         </section>
 
-        <div id="items-container" class="cards-grid">
-            <div class="card skeleton"></div>
-            <div class="card skeleton"></div>
-            <div class="card skeleton"></div>
-        </div>
+        <div id="items-container" class="cards-grid"></div>
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ duration: 800, once: true });
-    </script>
     <script src="app.js"></script>
 </body>
 </html>
