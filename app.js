@@ -1,19 +1,22 @@
 const API_URL = "https://study-swap.onrender.com/api/items";
 let allItems = [];
 
-// Тема
+// Перемикач теми
 document.getElementById('theme-toggle').addEventListener('click', () => {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
 });
 
+// Завантаження даних
 async function loadItems() {
     try {
         const res = await fetch(API_URL);
         allItems = await res.json();
         renderItems(allItems);
-        AOS.init({ duration: 800 });
-    } catch (e) { console.error("Error loading"); }
+        AOS.init({ duration: 800, once: true });
+    } catch (err) {
+        console.error("Помилка завантаження даних");
+    }
 }
 
 function renderItems(items) {
@@ -31,8 +34,14 @@ function renderItems(items) {
             <div class="card-header">📌 ${item.description}</div>
             <div class="card-body">
                 <h3>${item.title}</h3>
-                <div class="date-tag">🗓 ${date}</div>
-                ${item.imageUrl ? `<img src="${item.imageUrl}">` : ''}
+                <div class="date-info">🗓 ${date}</div>
+                
+                ${item.imageUrl ? `
+                    <a href="${item.imageUrl}" target="_blank">
+                        <img src="${item.imageUrl}" title="Натисніть, щоб відкрити">
+                    </a>
+                ` : ''}
+
                 <div style="display:flex; justify-content: space-between; align-items: center;">
                     <button class="delete-btn" onclick="deleteItem('${item._id}')">🗑 Видалити</button>
                     <span style="font-size: 18px;">❤️ 0</span>
@@ -43,30 +52,42 @@ function renderItems(items) {
     });
 }
 
+// Пошук
 function filterItems() {
-    const q = document.getElementById('search').value.toLowerCase();
-    const filtered = allItems.filter(i => i.title.toLowerCase().includes(q) || i.description.toLowerCase().includes(q));
+    const query = document.getElementById('search').value.toLowerCase();
+    const filtered = allItems.filter(item => 
+        item.title.toLowerCase().includes(query) || 
+        item.description.toLowerCase().includes(query)
+    );
     renderItems(filtered);
 }
 
+// Завантаження нового
 async function uploadItem() {
     const title = document.getElementById('title').value;
     const desc = document.getElementById('description').value;
-    const img = document.getElementById('image').files[0];
+    const imageFile = document.getElementById('image').files[0];
 
-    if (!title || !desc) return alert("Заповни всі поля!");
+    if(!title || !desc) return alert("Заповніть назву та предмет!");
 
-    const fd = new FormData();
-    fd.append('title', title);
-    fd.append('description', desc);
-    if(img) fd.append('image', img);
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', desc);
+    if(imageFile) formData.append('image', imageFile);
 
-    await fetch(API_URL, { method: 'POST', body: fd });
-    location.reload(); // Перезавантаження для оновлення списку
+    await fetch(API_URL, { method: 'POST', body: formData });
+    
+    // Скидання полів
+    document.getElementById('title').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('image').value = '';
+    
+    loadItems();
 }
 
+// Видалення
 async function deleteItem(id) {
-    if(confirm("Видалити цей матеріал?")) {
+    if(confirm('Видалити цей матеріал?')) {
         await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
         loadItems();
     }
