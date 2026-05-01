@@ -10,11 +10,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Налаштування Cloudinary
+// Налаштування Cloudinary (назви змінено згідно з твоїм скриншотом Render)
 cloudinary.config({
-  cloud_name: 'dpg4smpad', 
-  api_key: '763126622969787',
-  api_secret: '8bysRFPvQzdkJ7ifOUHy9Two5g0'
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 const storage = new CloudinaryStorage({
@@ -23,7 +23,7 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage });
 
-// Схема бази даних (Додано timestamps для дати)
+// Схема бази даних з категоріями та часом створення
 const ItemSchema = new mongoose.Schema({
     title: String,
     description: String,
@@ -33,39 +33,46 @@ const ItemSchema = new mongoose.Schema({
 
 const Item = mongoose.model('Item', ItemSchema);
 
-// Підключення до БД
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("Connected to MongoDB"))
-    .catch(err => console.error(err));
+// Підключення до БД (назва MONGODB_URI як на скриншоті)
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log("✅ База підключена успішно"))
+    .catch(err => console.error("❌ Помилка підключення до БД:", err));
 
-// Ендпоінт: Отримати всі оголошення
+// Отримати всі оголошення (нові будуть зверху)
 app.get('/api/items', async (req, res) => {
     try {
-        const items = await Item.find(); // Тимчасово приберемо sort, щоб перевірити запуск
+        const items = await Item.find().sort({ createdAt: -1 });
         res.json(items);
     } catch (err) {
-        console.error("Помилка БД:", err);
-        res.status(500).json({ message: "Помилка сервера" });
+        res.status(500).json({ message: "Помилка сервера при отриманні даних" });
     }
 });
 
-// Ендпоінт: Створити оголошення
+// Створити нове оголошення
 app.post('/api/items', upload.single('image'), async (req, res) => {
-    const newItem = new Item({
-        title: req.body.title,
-        description: req.body.description,
-        category: req.body.category,
-        imageUrl: req.file ? req.file.path : ""
-    });
-    await newItem.save();
-    res.json(newItem);
+    try {
+        const newItem = new Item({
+            title: req.body.title,
+            description: req.body.description,
+            category: req.body.category,
+            imageUrl: req.file ? req.file.path : ""
+        });
+        await newItem.save();
+        res.json(newItem);
+    } catch (err) {
+        res.status(500).json({ message: "Помилка при створенні оголошення" });
+    }
 });
 
-// Ендпоінт: ВИДАЛИТИ оголошення (Нове!)
+// Видалити оголошення
 app.delete('/api/items/:id', async (req, res) => {
-    await Item.findByIdAndDelete(req.params.id);
-    res.json({ message: "Deleted successfully" });
+    try {
+        await Item.findByIdAndDelete(req.params.id);
+        res.json({ message: "Оголошення видалено" });
+    } catch (err) {
+        res.status(500).json({ message: "Помилка при видаленні" });
+    }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`🚀 Сервер запущено на порту ${PORT}`));
